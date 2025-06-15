@@ -57,7 +57,7 @@ export default function MainSidebar() {
   return (
     <aside className="w-80 bg-card border-r border-border p-4 flex-shrink-0 hidden md:flex flex-col">
       <NavLink 
-        to="/ApiOverview" 
+        to="/dashboard" 
         end
         className={({ isActive }) => `block mb-4 py-2 px-3 text-sm font-semibold rounded-md transition-colors ${isActive ? 'bg-accent/10 text-accent' : 'bg-footer-bg text-foreground'}`}
       >

@@ -18,7 +18,7 @@ const MainRoutes = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route element={<AdminLayout />}>
-          <Route path="/ApiOverview" element={<ApiOverviewPage />} />
+          <Route path="/dashboard" element={<ApiOverviewPage />} />
           <Route
             path="/endpoint/:endpointName"
             element={<EndpointDetailPage />}

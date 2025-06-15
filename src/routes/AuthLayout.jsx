@@ -4,7 +4,7 @@ import { Mountain } from 'lucide-react';
 
 const AuthLayout = ({ children, pageTitle, welcomeMessage }) => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-stone-100 via-rose-50 to-stone-100 bg-[length:200%_200%] animate-aurora">
+    <div className="flex font-plus-jakarta items-center justify-center min-h-screen bg-gradient-to-r from-stone-100 via-rose-50 to-stone-100 bg-[length:200%_200%] animate-aurora">
       <div className="relative flex flex-col w-full max-w-5xl m-4 overflow-hidden shadow-2xl rounded-2xl md:flex-row">
         
         <div className="flex flex-col justify-center w-full p-6 bg-card text-card-foreground sm:p-8 md:p-12 md:w-1/2">

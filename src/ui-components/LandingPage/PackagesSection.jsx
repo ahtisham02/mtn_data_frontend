@@ -52,43 +52,55 @@ const packages = [
   {
     id: 'plan_mega',
     name: "Mega",
-    price: 949,
-    details: ["Credits: 250,000/month", "Requests: 300,000/month"],
+    price: 'Custom',
+    details: ["Custom Credits", "Custom Requests", "Dedicated Support"],
     features: [
       { text: "LinkedIn Profile Data", included: true }, { text: "LinkedIn Jobs Data", included: true }, { text: "LinkedIn Company Data", included: true },
       { text: "Premium Company Insights", included: true }, { text: "Sales Navigator Search", included: true }, { text: "AI-Powered Endpoints", included: true },
       { text: "Amazing Endpoints", included: true },
     ],
-    rateLimit: "Rate Limit: 150 requests/minute",
+    rateLimit: "Custom Rate Limits",
   },
 ];
 
 const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
   const isFreePlan = pkg.price === 0;
-  
+  const isCustomPlan = pkg.id === 'plan_mega';
+
   return (
     <div className="flex flex-col h-full p-8 transition-all duration-300 bg-white border rounded-2xl border-border hover:shadow-xl hover:-translate-y-1">
       <h3 className="text-2xl font-bold text-foreground">{pkg.name}</h3>
       <div className="flex items-end mt-4">
-        <span className="text-5xl font-extrabold text-foreground">${pkg.price}</span>
-        <span className="pb-1 ml-2 font-semibold text-muted">/Month</span>
+        {typeof pkg.price === 'number' ? (
+          <>
+            <span className="text-5xl font-extrabold text-foreground">${pkg.price}</span>
+            <span className="pb-1 ml-2 font-semibold text-muted">/Month</span>
+          </>
+        ) : (
+          <span className="text-4xl font-extrabold text-foreground">{pkg.price}</span>
+        )}
       </div>
       <div className="mt-4 space-y-1 text-sm text-muted">{pkg.details.map((detail) => (<p key={detail}>{detail}</p>))}</div>
       <div className="flex flex-col flex-grow pt-8 mt-8 border-t border-border">
         <ul className="space-y-4">{pkg.features.map((feature) => (<li key={feature.text} className="flex items-start gap-3">{feature.included ? (<CheckCircle className="flex-shrink-0 w-5 h-5 mt-0.5 text-green-500" />) : (<XCircle className="flex-shrink-0 w-5 h-5 mt-0.5 text-rose-400" />)}<span className={!feature.included ? "text-muted line-through" : "text-foreground"}>{feature.text}</span></li>))}</ul>
         {pkg.rateLimit && (<p className="mt-6 text-xs font-semibold text-muted">{pkg.rateLimit}</p>)}
         <div className="mt-auto pt-6">
-            <button 
-                onClick={onCtaClick}
-                disabled={isFreePlan || isLoading}
-                className={`flex items-center justify-center w-full px-4 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg ${
-                    isFreePlan 
-                        ? 'bg-muted cursor-not-allowed' 
-                        : 'bg-accent hover:bg-accent-hover hover:shadow-xl'
-                }`}
+          {isCustomPlan ? (
+            <ScrollLink
+              to="booking" spy={true} smooth={true} offset={-70} duration={800}
+              className="flex items-center justify-center w-full px-4 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg cursor-pointer bg-accent hover:bg-accent-hover hover:shadow-xl"
             >
-                {isLoading ? "Processing..." : (isFreePlan ? 'Free Plan' : 'Get Started')}
+              Contact Us
+            </ScrollLink>
+          ) : (
+            <button
+              onClick={onCtaClick}
+              disabled={isFreePlan || isLoading}
+              className={`flex items-center justify-center w-full px-4 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg ${isFreePlan ? 'bg-muted cursor-not-allowed' : 'bg-accent hover:bg-accent-hover hover:shadow-xl'}`}
+            >
+              {isLoading ? "Processing..." : (isFreePlan ? 'Free Plan' : 'Get Started')}
             </button>
+          )}
         </div>
       </div>
     </div>
@@ -101,7 +113,6 @@ const PackagesSection = () => {
     const planToStripeCheckoutLinkUrl = useMemo(() => ({
         "plan_pro": "https://buy.stripe.com/test_28E3cv32C1mi9HFd2A7wA02",
         "plan_ultra": "https://buy.stripe.com/test_28E6oH6eO9SO4nl3s07wA01",
-        "plan_mega": "https://buy.stripe.com/test_28E6oH6eO9SO4nl3s07wA01",
     }), []);
 
     const handlePlanSelect = async (planId) => {

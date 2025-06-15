@@ -4,7 +4,7 @@ import MainSidebar from '../ui-components/AdminPage/MainSidebar';
 
 export default function AdminLayout() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen font-plus-jakarta">
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <MainSidebar />

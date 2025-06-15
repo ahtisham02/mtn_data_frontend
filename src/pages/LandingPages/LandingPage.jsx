@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../../ui-components/LandingPage/Navbar";
 import Footer from "../../ui-components/LandingPage/Footer";
 import HeroSection from "../../ui-components/LandingPage/HeroSection";
@@ -14,8 +15,19 @@ import TestimonialsSection from "../../ui-components/LandingPage/TestimonialsSec
 import FaqSection from "../../ui-components/LandingPage/FaqSection";
 
 const LandingPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [location]);
+
   return (
-    <>
+    <div className="font-plus-jakarta">
       <Navbar />
       <main>
         <HeroSection />
@@ -31,7 +43,7 @@ const LandingPage = () => {
         <FaqSection />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
