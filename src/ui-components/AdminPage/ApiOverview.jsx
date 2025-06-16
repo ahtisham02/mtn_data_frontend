@@ -2,68 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Code, Users, Tag, Zap, Gauge, Clock, CheckCircle, 
-  Clipboard, Target
+  Target, ChevronRight
 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { apiData, collections } from '../../utils/data';
 import ContactModal from './ContactModal';
 import Spinner from './Spinner';
-
-export const apiData = {
-  name: 'MtnAPI Services',
-  provider: 'Mtn Devs',
-  tagline: 'A suite of powerful, reliable APIs for modern applications.',
-  subscribers: 1842,
-  category: 'Developer Tools',
-  status: 'Operational',
-  stats: {
-    popularity: '9.9/10',
-    serviceLevel: '99.8%',
-    latency: '120ms',
-    testSuccess: '99%',
-  },
-  plans: [
-    { id: 'plan_basic', title: 'BASIC', price: '$0.00', active: true },
-    { id: 'plan_pro', title: 'PRO', price: '$49.00', active: false, stripeLink: 'https://buy.stripe.com/test_28E3cv32C1mi9HFd2A7wA02' },
-    { id: 'plan_ultra', title: 'ULTRA', price: '$199.00', active: false, stripeLink: 'https://buy.stripe.com/test_28E6oH6eO9SO4nl3s07wA01' },
-    { id: 'plan_enterprise', title: 'Enterprise', price: 'Custom', active: false, type: 'contact' }
-  ],
-  analytics: {
-    calls: [301, 404, 652, 801, 559, 903, 1120],
-  },
-};
-
-export const collections = [
-  {
-    id: 'user-management',
-    name: 'User Management API',
-    endpoints: [
-      { slug: 'create-user', method: 'POST', name: 'Create User', url: 'https://api.mtn.com/v1/users' },
-      { slug: 'get-user', method: 'GET', name: 'Get User by ID', url: 'https://api.mtn.com/v1/users/usr_12345' },
-      { slug: 'update-user', method: 'PUT', name: 'Update User', url: 'https://api.mtn.com/v1/users/usr_12345' },
-      { slug: 'delete-user', method: 'DELETE', name: 'Delete User', url: 'https://api.mtn.com/v1/users/usr_12345' }
-    ]
-  },
-  {
-    id: 'linkedin-scraper',
-    name: 'LinkedIn ScraperX',
-    endpoints: [
-      { slug: 'person-followers-count', method: 'POST', name: 'Person Followers Count', url: 'https://mtn-linkedin-scraperx-api.p.mtnapi.com/api/person/followers' },
-      { slug: 'person-skills', method: 'GET', name: 'Person Skills', url: 'https://mtn-linkedin-scraperx-api.p.mtnapi.com/api/person/skills' },
-      { slug: 'update-scrape-config', method: 'PUT', name: 'Update Scrape Config', url: 'https://mtn-linkedin-scraperx-api.p.mtnapi.com/api/config' },
-      { slug: 'delete-scrape-job', method: 'DELETE', name: 'Delete Scrape Job', url: 'https://mtn-linkedin-scraperx-api.p.mtnapi.com/api/job/job_xyz' }
-    ]
-  },
-  {
-    id: 'payment-gateway',
-    name: 'Payment Gateway API',
-    endpoints: [
-      { slug: 'create-charge', method: 'POST', name: 'Create Charge', url: 'https://api.mtn.com/v1/charge' },
-      { slug: 'get-charge', method: 'GET', name: 'Get Charge Details', url: 'https://api.mtn.com/v1/charge/ch_9876' },
-      { slug: 'update-charge-metadata', method: 'PUT', name: 'Update Charge Metadata', url: 'https://api.mtn.com/v1/charge/ch_9876' },
-      { slug: 'refund-charge', method: 'DELETE', name: 'Refund Charge', url: 'https://api.mtn.com/v1/charge/ch_9876/refund' }
-    ]
-  }
-];
 
 const analyticsEndpointUsage = collections.flatMap(collection => 
     collection.endpoints.map(endpoint => ({
@@ -85,57 +29,67 @@ const StatCard = ({ icon, label, value }) => (
 );
 
 const PlanCard = ({ plan, onPlanSelect, isLoading }) => {
-    const { title, price, active, type } = plan;
+    const { title, price, active, features } = plan;
+    const [integer, decimal] = price.replace('$', '').split('.');
 
     return (
-        <div className={`relative p-6 border rounded-lg text-center transition-all duration-300 overflow-hidden flex flex-col justify-between ${active ? 'border-accent ring-2 ring-accent bg-accent/5' : 'border-border bg-card hover:border-accent'}`}>
-            <div>
-                <h4 className="font-semibold text-muted">{title}</h4>
-                <p className="mt-1 text-3xl font-bold text-foreground">{price} {price !== 'Custom' && <span className="font-normal text-sm text-muted-foreground">/ mo</span>}</p>
-                {active && <span className="mt-4 inline-block text-xs font-semibold text-accent-hover bg-accent/20 px-3 py-1 rounded-full">Current Plan</span>}
+        <div className={`p-6 w-full border rounded-lg transition-all duration-300 flex flex-col gap-6 ${active ? 'border-accent ring-2 ring-accent bg-accent/5' : 'border-border bg-card'}`}>
+            
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="flex-1">
+                    <h4 className="font-semibold text-lg text-foreground">{title}</h4>
+                    <ul className="mt-4 space-y-2">
+                        {features.map((feature, index) => (
+                            <li key={index} className="flex items-center gap-3">
+                                <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                <span className="text-muted-foreground">{feature}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="flex-shrink-0 flex flex-col items-center md:items-end">
+                    <p className="flex items-baseline text-foreground">
+                        <span className="text-2xl font-semibold">$</span>
+                        <span className="text-5xl font-extrabold tracking-tight">{integer}</span>
+                        <span className="text-2xl font-semibold">.{decimal}</span>
+                    </p>
+                    <p className="text-sm text-muted -mt-1">Per Month</p>
+                </div>
             </div>
-            <div className="mt-6">
-                 <button 
+
+            <div>
+                <button 
                     onClick={() => onPlanSelect(plan)}
-                    disabled={active && type !== 'contact' || isLoading}
-                    className={`w-full py-2 font-semibold rounded-md transition-colors flex items-center justify-center ${active && type !== 'contact' ? 'bg-accent/30 text-accent-hover cursor-not-allowed' : 'bg-accent text-white hover:bg-accent-hover'}`}
+                    disabled={active || isLoading}
+                    className={`w-full py-2.5 font-semibold rounded-md transition-colors flex items-center justify-center ${active ? 'bg-accent/30 text-accent-hover cursor-not-allowed' : 'bg-accent text-white hover:bg-accent-hover'}`}
                 >
-                    {isLoading ? <Spinner /> : (type === 'contact' ? 'Contact Support' : (active ? 'Active' : 'Upgrade'))}
+                    {isLoading ? <Spinner /> : (active ? 'Current Plan' : 'Subscribe')}
                 </button>
             </div>
         </div>
     );
 };
 
-const EndpointRow = ({ method, name, url, slug }) => {
-    const methodColors = {
-        'GET': 'text-green-400 bg-green-400/10',
-        'POST': 'text-blue-400 bg-blue-400/10',
-        'PUT': 'text-yellow-400 bg-yellow-400/10',
-        'DELETE': 'text-red-400 bg-red-400/10',
-    };
+const CollectionRow = ({ collection }) => {
+  if (!collection.endpoints || collection.endpoints.length === 0) {
+    return null;
+  }
 
-    const handleCopy = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigator.clipboard.writeText(url);
-        toast.success("Endpoint URL copied!");
-    };
+  const firstEndpointSlug = collection.endpoints[0].slug;
 
-    return (
-        <Link to={`/endpoint/${slug}`} className="flex items-center p-3 -mx-3 rounded-lg hover:bg-footer-bg transition-colors group">
-            <div className="flex-grow flex items-center gap-4">
-                <span className={`w-16 text-center text-xs font-bold px-2 py-1 rounded-md ${methodColors[method] || 'text-gray-400 bg-gray-400/10'}`}>
-                    {method}
-                </span>
-                <p className="font-semibold text-sm text-foreground">{name}</p>
-                <p className="font-mono text-sm text-muted-foreground hidden md:block">- {url}</p>
-            </div>
-            <button className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={handleCopy}>
-                <Clipboard className="h-4 w-4 text-muted-foreground hover:text-accent"/>
-            </button>
-        </Link>
-    );
+  return (
+    <Link 
+      to={`/endpoint/${firstEndpointSlug}`} 
+      className="flex items-center justify-between p-4 -m-2 rounded-lg hover:bg-footer-bg transition-colors group"
+    >
+      <div className="flex flex-col">
+        <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors">{collection.name}</h3>
+        <p className="text-sm text-muted-foreground">{collection.endpoints.length} endpoints</p>
+      </div>
+      <ChevronRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
+    </Link>
+  );
 };
 
 const AnalyticsChart = ({ data }) => {
@@ -203,7 +157,6 @@ const EndpointUsageList = ({ data }) => (
     </div>
 );
 
-
 export default function ApiOverview() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isNotifying, setIsNotifying] = useState(false);
@@ -224,11 +177,6 @@ export default function ApiOverview() {
     };
 
     const handlePlanSelect = (plan) => {
-        if (plan.type === 'contact') {
-            navigate('/', { state: { scrollTo: 'booking' } });
-            return;
-        }
-
         if (!plan.stripeLink) return;
         setLoadingPlanId(plan.id);
         setTimeout(() => {
@@ -247,7 +195,7 @@ export default function ApiOverview() {
                                     <h1 className="text-3xl font-bold text-foreground">{apiData.name}</h1>
                                     <span className="flex items-center gap-1.5 bg-green-500/10 text-green-400 text-xs font-medium px-2.5 py-1 rounded-full">
                                         <CheckCircle className="h-3.5 w-3.5"/>
-                                        {apiData.status}
+                                        Operational
                                     </span>
                                 </div>
                                 <p className="text-muted-foreground mt-1">{apiData.tagline}</p>
@@ -267,29 +215,24 @@ export default function ApiOverview() {
                                     <h2 className="text-xl font-bold text-foreground">Analytics</h2>
                                     <p className="text-sm text-muted-foreground">Last 7 Days</p>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-4">Total calls this period: {apiData.analytics.calls.reduce((a, b) => a + b, 0).toLocaleString()}</p>
-                                <AnalyticsChart data={apiData.analytics.calls} />
+                                <p className="text-sm text-muted-foreground mb-4">Total calls this period: {(Math.floor(Math.random() * 5000) + 2000).toLocaleString()}</p>
+                                <AnalyticsChart data={Array.from({length: 7}, () => Math.floor(Math.random() * 1200))} />
                             </div>
                         </section>
                         <section>
-                            <h2 className="text-xl font-bold text-foreground mb-4">Available Plans</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <h2 className="text-xl font-bold text-foreground mb-4">Pricing Plan</h2>
+                            <div className="flex justify-center mt-6">
                                 {apiData.plans.map(plan => (
                                     <PlanCard key={plan.id} plan={plan} onPlanSelect={handlePlanSelect} isLoading={loadingPlanId === plan.id} />
                                 ))}
                             </div>
                         </section>
                         <section>
-                            <h2 className="text-xl font-bold text-foreground mb-4">API Endpoints</h2>
+                            <h2 className="text-xl font-bold text-foreground mb-4">API Collections</h2>
                             <div className="p-6 bg-card border border-border rounded-xl">
-                                <div className="space-y-6">
+                                <div className="space-y-1 divide-y divide-border -my-2">
                                     {collections.map(collection => (
-                                        <div key={collection.id}>
-                                            <h3 className="text-lg font-semibold text-foreground mb-3">{collection.name}</h3>
-                                            <div className="space-y-2">
-                                                {collection.endpoints.map(ep => <EndpointRow key={ep.slug} {...ep} />)}
-                                            </div>
-                                        </div>
+                                        <CollectionRow key={collection.id} collection={collection} />
                                     ))}
                                 </div>
                             </div>

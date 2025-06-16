@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Edit, Save, X, ChevronDown } from 'lucide-react';
+import { Edit, Save, X, ChevronDown, AlertCircle } from 'lucide-react';
 import Spinner from './Spinner';
 import ApiResponseViewer from './ApiResponseViewer';
 
@@ -64,42 +64,129 @@ const SubTab = ({ label, isActive, onClick }) => (
     </button>
 );
 
+const EmptyStateMessage = ({ message }) => (
+    <div className="text-center py-16 flex flex-col items-center justify-center text-muted">
+        <div className="mb-4 text-rose-400">
+            <AlertCircle size={32} strokeWidth={1.5} />
+        </div>
+        <p className="text-sm">{message}</p>
+    </div>
+);
+
+const InitialStateViewer = ({ url }) => (
+    <div className="bg-card border border-border rounded-lg h-full p-6 flex flex-col">
+        <div className="text-left w-full">
+            <h3 className="text-sm font-semibold text-muted mb-2 uppercase tracking-wider">Request URL</h3>
+            <div className="bg-background p-3 rounded-md border border-border">
+                <pre className="text-sm text-foreground font-mono whitespace-pre-wrap break-all">{url}</pre>
+            </div>
+        </div>
+        <div className="flex-grow flex items-center justify-center">
+            <p className="text-muted text-center">Click "Test Endpoint" to send a request.</p>
+        </div>
+    </div>
+);
+
 export default function EndpointPage({ endpoint }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({});
+  const [editData, setEditData] = useState({ params: [], headers: [], body: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [testResult, setTestResult] = useState(null);
   const [activeRequestTab, setActiveRequestTab] = useState('Body');
 
   useEffect(() => {
-    setEditData({ params: [...endpoint.params], headers: [...endpoint.headers], body: endpoint.body || '' });
+    setEditData({ 
+        params: JSON.parse(JSON.stringify(endpoint.params || [])), 
+        headers: JSON.parse(JSON.stringify(endpoint.headers || [])), 
+        body: endpoint.body || '' 
+    });
     setIsEditing(false);
     setTestResult(null);
     setActiveRequestTab(endpoint.body || endpoint.requestSchema?.length > 0 ? 'Body' : 'Params');
   }, [endpoint]);
   
-  const handleTestEndpoint = () => {
+  const handleTestEndpoint = async () => {
     setIsLoading(true);
     setTestResult(null);
     const startTime = performance.now();
     
-    setTimeout(() => {
-      const endTime = performance.now();
-      const total = Math.round(endTime - startTime);
-      const timing = { dns: 10, tcp: 5, tls: 20, processing: total - 55, transfer: 20, total };
-      const bodySize = new Blob([JSON.stringify(endpoint.response)]).size;
+    const headers = Object.fromEntries(editData.headers.map(h => [h.key, h.value]));
 
-      setTestResult({
-          status: endpoint.method === 'POST' ? 201 : 200,
-          statusText: endpoint.method === 'POST' ? 'Created' : 'OK',
-          url: endpoint.url, timing, bodySize,
-          requestHeaders: editData.headers,
-          requestBody: editData.body,
-          responseHeaders: endpoint.responseHeaders || [],
-          data: endpoint.response
-      });
-      setIsLoading(false);
-    }, 1500);
+    let urlTemplate = endpoint.url;
+    const queryParams = new URLSearchParams();
+
+    if (editData.params && editData.params.length > 0) {
+        editData.params.forEach(p => {
+            if (p.value) {
+                if (p.in === 'path') {
+                    urlTemplate = urlTemplate.replace(`{${p.key}}`, p.value);
+                } else {
+                    queryParams.append(p.key, p.value);
+                }
+            }
+        });
+    }
+
+    const queryString = queryParams.toString();
+    const finalUrl = queryString ? `${urlTemplate}?${queryString}` : urlTemplate;
+
+    const requestOptions = {
+        method: endpoint.method,
+        headers: headers,
+        body: (endpoint.method !== 'GET' && endpoint.method !== 'DELETE' && editData.body) ? editData.body : undefined,
+    };
+    
+    try {
+        const response = await fetch(finalUrl, requestOptions);
+        const endTime = performance.now();
+        const total = Math.round(endTime - startTime);
+
+        let responseData;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            responseData = await response.json();
+        } else {
+            responseData = await response.text();
+        }
+        
+        const responseHeaders = [];
+        response.headers.forEach((value, key) => {
+            responseHeaders.push({ key, value });
+        });
+        
+        const bodySize = new Blob([JSON.stringify(responseData)]).size;
+        
+        setTestResult({
+            status: response.status,
+            statusText: response.statusText,
+            url: response.url,
+            timing: { dns: 0, tcp: 0, tls: 0, processing: total, transfer: 0, total },
+            bodySize: bodySize,
+            requestParams: editData.params,
+            requestHeaders: editData.headers,
+            requestBody: editData.body,
+            responseHeaders: responseHeaders,
+            data: responseData,
+        });
+    } catch (error) {
+        const endTime = performance.now();
+        setTestResult({
+            isError: true,
+            status: 'Error',
+            statusText: 'Failed to Fetch',
+            url: finalUrl,
+            timing: { total: Math.round(endTime - startTime) },
+            requestParams: editData.params,
+            requestHeaders: editData.headers,
+            requestBody: editData.body,
+            data: {
+                message: error.message,
+                details: "Could not connect to the API endpoint. Check the server, URL, and for CORS issues."
+            }
+        });
+    } finally {
+        setIsLoading(false);
+    }
   };
   
   const handleEditChange = (type, index, field, value) => {
@@ -114,8 +201,10 @@ export default function EndpointPage({ endpoint }) {
       const contentTypeIndex = headers.findIndex(h => h.key.toLowerCase() === 'content-type');
       if (contentTypeIndex !== -1) {
           headers[contentTypeIndex].value = newType;
-          setEditData(prev => ({ ...prev, headers }));
+      } else {
+          headers.push({ key: 'Content-Type', value: newType });
       }
+      setEditData(prev => ({ ...prev, headers }));
   };
 
   const requestTabs = ['Params', `Headers`, 'Authorizations', 'Body'];
@@ -143,17 +232,25 @@ export default function EndpointPage({ endpoint }) {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
         <div className={`bg-card border rounded-lg transition-shadow ${isEditing ? 'border-accent ring-2 ring-accent' : 'border-border'}`}>
           <div className="border-b border-border"><nav className="flex space-x-1 px-2 overflow-x-auto">{requestTabs.map(tab => ( <TabButton key={tab} label={tab} isActive={activeRequestTab === tab} onClick={() => setActiveRequestTab(tab)} /> ))}</nav></div>
-          <div className="p-6 space-y-4">
-             {activeRequestTab === 'Params' && (editData.params?.length > 0 ? (<div className="space-y-4">{editData.params.map((p, i) => <RequestDetail key={i} label={p.key} value={p.value} isEditing={isEditing} onChange={(e) => handleEditChange('params', i, 'value', e.target.value)} />)}</div>) : (<div className="text-muted text-center py-8">No parameters.</div>))}
-             {activeRequestTab === 'Headers' && (<div className="space-y-4">{editData.headers?.map((h, i) => <RequestDetail key={i} label={h.key} value={h.value} isEditing={isEditing} onChange={(e) => handleEditChange('headers', i, 'value', e.target.value)} />)}</div>)}
+          <div className="p-6">
+             {activeRequestTab === 'Params' && (editData.params?.length > 0 ? (<div className="space-y-4">{editData.params.map((p, i) => <RequestDetail key={i} label={p.key} value={p.value} isEditing={isEditing} onChange={(e) => handleEditChange('params', i, 'value', e.target.value)} />)}</div>) : (<EmptyStateMessage message="This endpoint does not require any parameters." />))}
+             {activeRequestTab === 'Headers' && (editData.headers?.length > 0 ? (<div className="space-y-4">{editData.headers.map((h, i) => <RequestDetail key={i} label={h.key} value={h.value} isEditing={isEditing} onChange={(e) => handleEditChange('headers', i, 'value', e.target.value)} />)}</div>) : (<EmptyStateMessage message="No default headers are specified for this request." />))}
              {activeRequestTab === 'Authorizations' && (<div className="space-y-2 text-foreground"><h3 className="font-bold">{endpoint.auth.type}</h3><p className="text-sm text-muted">{endpoint.auth.details}</p></div>)}
-             {activeRequestTab === 'Body' && (endpoint.body || endpoint.requestSchema?.length > 0 ? (<RequestBodyEditor endpoint={endpoint} editData={editData} isEditing={isEditing} onBodyChange={(e) => setEditData(p => ({ ...p, body: e.target.value}))} onMediaTypeChange={handleMediaTypeChange} />) : (<div className="text-muted text-center py-8">No request body.</div>))}
+             {activeRequestTab === 'Body' && (endpoint.body || endpoint.requestSchema?.length > 0 ? (<RequestBodyEditor endpoint={endpoint} editData={editData} isEditing={isEditing} onBodyChange={(e) => setEditData(p => ({ ...p, body: e.target.value}))} onMediaTypeChange={handleMediaTypeChange} />) : (<EmptyStateMessage message="This request does not have a body." />))}
           </div>
         </div>
         <div className="min-h-[400px]">
             {isLoading && <div className="flex items-center justify-center h-full bg-card border-border border rounded-lg"><Spinner large /></div>}
-            {!isLoading && !testResult && (<div className="flex items-center justify-center h-full bg-card border-border border rounded-lg text-muted">Click "Test Endpoint" to see the response.</div>)}
-            {!isLoading && testResult && <ApiResponseViewer result={testResult} />}
+            {!isLoading && !testResult && <InitialStateViewer url={endpoint.url} />}
+            {!isLoading && testResult && (
+                testResult.isError ? 
+                <div className="bg-red-500/10 border border-red-500 text-red-700 rounded-lg p-4 h-full">
+                    <div className="flex items-center gap-2 font-bold mb-2"><AlertCircle/> {testResult.statusText}</div>
+                    <pre className="text-sm bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all">{JSON.stringify(testResult.data, null, 2)}</pre>
+                </div> 
+                : 
+                <ApiResponseViewer result={testResult} />
+            )}
         </div>
       </div>
     </div>
