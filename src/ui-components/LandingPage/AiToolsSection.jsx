@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { Link as ScrollLink } from 'react-scroll';
+import { Link as ScrollLink } from "react-scroll";
 
 import img1 from "../../assets/img/1.png";
 import img2 from "../../assets/img/2.png";
@@ -18,100 +18,100 @@ import img11 from "../../assets/img/11.png";
 const tools = [
   {
     category: "Instant Support",
-    brand: "AI LinkedIn",
+    brand: "AI Suite",
     title: "ChatBot",
     description:
-      "Resolves any query regarding LinkedIn person and company profiles through an AI-powered chat bot.",
+      "Resolve any query about people or organizations through an AI-powered chat assistant.",
     image: img1,
     accentClass: "bg-green-500",
   },
   {
     category: "Smart Suggestions",
-    brand: "AI LinkedIn",
+    brand: "AI Suite",
     title: "Profile Optimizer",
     description:
-      "Retrieves LinkedIn profile details for a person or company, enhanced with AI-generated suggestions for optimization.",
+      "Analyze profile details and get AI-generated suggestions for better positioning and visibility.",
     image: img2,
     accentClass: "bg-teal-500",
   },
   {
     category: "Efficient Reviews",
-    brand: "AI LinkedIn",
+    brand: "AI Suite",
     title: "Magic Pen",
     description:
-      "Provides insights on strengths and weaknesses of LinkedIn profiles for both individuals and companies.",
+      "Gain insights on strengths and areas for improvement across profiles and companies.",
     image: img3,
     accentClass: "bg-cyan-500",
   },
   {
-    category: "AI-Recommendations",
-    brand: "AI LinkedIn",
-    title: "Automated Recommendations",
+    category: "AI Recommendations",
+    brand: "AI Suite",
+    title: "Automated Enhancer",
     description:
-      "Generates AI-driven recommendations to enhance LinkedIn profiles for individuals or companies.",
+      "Generate actionable, AI-driven improvement tips for personal or company profiles.",
     image: img4,
     accentClass: "bg-sky-500",
   },
   {
-    category: "AI-Insights",
-    brand: "AI LinkedIn",
-    title: "Automated Insights",
+    category: "AI Insights",
+    brand: "AI Suite",
+    title: "Insight Generator",
     description:
-      "Delivers AI-generated insights for LinkedIn profiles, offering data-driven perspectives for improvement.",
+      "Receive data-backed insights tailored to individual or organizational profiles.",
     image: img5,
     accentClass: "bg-indigo-500",
   },
   {
     category: "Career Enhancement",
-    brand: "AI LinkedIn",
+    brand: "AI Suite",
     title: "Career Predictor",
     description:
-      "Predicts career progression based on LinkedIn profile data, identifying potential growth paths.",
+      "Forecast career growth paths and opportunities using AI-based profile analysis.",
     image: img6,
     accentClass: "bg-purple-500",
   },
   {
     category: "Industry Trends",
-    brand: "AI LinkedIn",
-    title: "Job Market Trends",
+    brand: "AI Suite",
+    title: "Market Trend Explorer",
     description:
-      "Provides job market trends for a company, specifically tailored for hiring managers.",
+      "Discover job market and industry trends to support recruitment and strategic decisions.",
     image: img7,
     accentClass: "bg-pink-500",
   },
   {
     category: "Automated Copywriting",
-    brand: "AI LinkedIn",
-    title: "Message and Email Crafter",
+    brand: "AI Suite",
+    title: "Message & Email Crafter",
     description:
-      "Writes personalized messages and emails for potential LinkedIn leads, optimized for engagement.",
+      "Compose personalized messages and emails to engage prospects or stakeholders effectively.",
     image: img8,
     accentClass: "bg-rose-500",
   },
   {
     category: "Profile Benchmarking",
-    brand: "AI LinkedIn",
+    brand: "AI Suite",
     title: "Profile Qualifier",
     description:
-      "Benchmarks a LinkedIn profile against potential leads, highlighting areas for improvement.",
+      "Benchmark profiles against industry standards or lead requirements to identify gaps.",
     image: img9,
     accentClass: "bg-orange-500",
   },
   {
     category: "Smart Comparisons",
-    brand: "AI LinkedIn",
-    title: "BenchMarking Tool",
+    brand: "AI Suite",
+    title: "Benchmarking Tool",
     description:
-      "Benchmarks a LinkedIn profile for general comparison, identifying performance relative to standards.",
+      "Evaluate profiles against key benchmarks and performance indicators for optimization.",
     image: img10,
     accentClass: "bg-amber-500",
   },
   {
     category: "Competitive Edge",
-    brand: "AI LinkedIn",
-    title: "Competitor Profile Analyzer",
+    brand: "AI Suite",
+    title: "Competitor Analyzer",
     description:
-      "Analyzes your LinkedIn profile in comparison with a competitor's, providing AI-driven insights on strengths and areas to enhance.",
+      "Compare any profile with competitors to discover strengths and improvement areas using AI.",
     image: img11,
     accentClass: "bg-lime-500",
   },
@@ -186,13 +186,13 @@ const AiToolsSection = () => {
       <div className="container px-4 mx-auto max-w-7xl">
         <div className="text-center">
           <p className="text-sm font-bold tracking-wider uppercase text-accent">
-            AI TOOLS FOR LINKEDIN
+            AI TOOLS FOR DATA INSIGHTS
           </p>
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
             AI-Powered Endpoints for
             <span className="relative inline-block ml-3">
               <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
-              <span className="relative">Smarter Insights</span>
+              <span className="relative">Smarter Decisions</span>
             </span>
           </h2>
         </div>

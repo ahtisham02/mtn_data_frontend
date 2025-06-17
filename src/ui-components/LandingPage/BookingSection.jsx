@@ -8,7 +8,7 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-const BookingSection = () => {
+const ConsultationSection = () => {
   return (
     <section id="booking" className="relative py-16 bg-white md:py-24">
       <div className="relative z-10 container px-4 mx-auto max-w-7xl">
@@ -20,18 +20,17 @@ const BookingSection = () => {
           variants={fadeInUp}
         >
           <p className="text-sm font-bold tracking-wider uppercase text-accent">
-            Book an Appointment
+            Schedule a Consultation
           </p>
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
-            Ready to Unlock
+            Ready to Leverage
             <span className="relative inline-block ml-3">
               <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
-              <span className="relative">LinkedIn Data?</span>
+              <span className="relative">Actionable Data?</span>
             </span>
           </h2>
           <p className="max-w-2xl mx-auto mt-4 text-lg text-slate-700">
-            Book an appointment with our team to discover how MTN Data ScrapeX
-            API can empower your applications.
+            Schedule a one-on-one call with our experts to see how our API can fuel your projects with powerful, real-time insights.
           </p>
         </motion.div>
 
@@ -43,6 +42,7 @@ const BookingSection = () => {
           variants={fadeInUp}
         >
           <div className="grid grid-cols-1 lg:grid-cols-3">
+            {/* Left side info panel */}
             <div className="p-8 border-b lg:border-b-0 lg:border-r border-border">
               <div className="flex items-center gap-2">
                 <Mountain className="w-8 h-8 text-accent" />
@@ -51,25 +51,24 @@ const BookingSection = () => {
                 </span>
               </div>
               <h3 className="mt-8 text-2xl font-bold text-foreground">
-                Book your LinkedIn Data Solutions Call
+                Book a Demo & Strategy Call
               </h3>
               <div className="mt-6 space-y-4 text-muted">
                 <div className="flex items-center gap-3">
                   <Clock size={20} />
-                  <span>30 Mins</span>
+                  <span>30-Minute Session</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Calendar size={20} />
-                  <span>Select a Date & Time</span>
+                  <span>Pick a Convenient Time</span>
                 </div>
               </div>
               <p className="mt-6 text-sm text-muted">
-                See how MTN Data ScrapeX API can meet your needs for real-time
-                LinkedIn data and AI-powered insights – let's find out if we're
-                the right fit for you.
+                Learn how our API provides the professional data and AI-driven analytics you need. In this call, we'll determine if our solution is the perfect match for your goals.
               </p>
             </div>
 
+            {/* Right side Calendly widget */}
             <div className="lg:col-span-2 min-h-[700px]">
               <InlineWidget
                 url="https://calendly.com/razorsgamer2005/30min"
@@ -90,4 +89,4 @@ const BookingSection = () => {
   );
 };
 
-export default BookingSection;
+export default ConsultationSection;

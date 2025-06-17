@@ -5,6 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Stripe configuration remains the same
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = STRIPE_PUBLISHABLE_KEY?.startsWith("pk_")
   ? loadStripe(STRIPE_PUBLISHABLE_KEY)
@@ -16,42 +17,44 @@ if (!stripePromise) {
   );
 }
 
-const packages = [
+// Renamed and rephrased the package data
+const subscriptionTiers = [
   {
-    id: "plan_pro",
-    name: "Pro Plan",
+    id: "plan_pro", // Kept the ID for Stripe link consistency
+    name: "All-Access Tier",
     price: 99.99,
-    details: ["Unlimited Credits", "High-Volume Requests"],
+    details: ["Unrestricted API Usage", "Built for Scale"],
     features: [
-      { text: "Full LinkedIn Profile, Jobs & Company Data", included: true },
-      { text: "Premium Company & Sales Navigator Insights", included: true },
-      { text: "Bulk Processing for All Endpoints", included: true },
-      { text: "AI-Powered Endpoints Included", included: true },
-      { text: "Amazing Endpoints Included", included: true },
-      { text: "Priority Email & Chat Support", included: true },
+      { text: "Comprehensive Profile, Job, and Company Data", included: true },
+      { text: "Advanced Sales & Company Intelligence", included: true },
+      { text: "High-Throughput Bulk Operations", included: true },
+      { text: "Access to All AI-Enhanced Endpoints", included: true },
+      { text: "Exclusive Access to Advanced Endpoints", included: true },
+      { text: "Dedicated Support via Chat & Email", included: true },
     ],
-    rateLimit: "Generous Rate Limits for Professional Use",
+    rateLimit: "High-Capacity Rate Limiting for Enterprise Needs",
   },
 ];
 
-const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
+// Renamed the component and its prop for clarity
+const SubscriptionCard = ({ tier, onCtaClick, isLoading }) => {
   return (
     <div className="flex flex-col h-full p-8 transition-all duration-300 bg-white border rounded-2xl border-border hover:shadow-xl hover:-translate-y-1">
-      <h3 className="text-2xl font-bold text-foreground">{pkg.name}</h3>
+      <h3 className="text-2xl font-bold text-foreground">{tier.name}</h3>
       <div className="flex items-end mt-4">
         <span className="text-5xl font-extrabold text-foreground">
-          ${pkg.price}
+          ${tier.price}
         </span>
-        <span className="pb-1 ml-2 font-semibold text-muted">/Month</span>
+        <span className="pb-1 ml-2 font-semibold text-muted">/per mo.</span>
       </div>
       <div className="mt-4 space-y-1 text-sm text-muted">
-        {pkg.details.map((detail) => (
+        {tier.details.map((detail) => (
           <p key={detail}>{detail}</p>
         ))}
       </div>
       <div className="flex flex-col flex-grow pt-8 mt-8 border-t border-border">
         <ul className="space-y-4">
-          {pkg.features.map((feature) => (
+          {tier.features.map((feature) => (
             <li key={feature.text} className="flex items-start gap-3">
               {feature.included ? (
                 <CheckCircle className="flex-shrink-0 w-5 h-5 mt-0.5 text-green-500" />
@@ -70,9 +73,9 @@ const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
             </li>
           ))}
         </ul>
-        {pkg.rateLimit && (
+        {tier.rateLimit && (
           <p className="mt-6 text-xs font-semibold text-muted">
-            {pkg.rateLimit}
+            {tier.rateLimit}
           </p>
         )}
         <div className="mt-auto pt-6">
@@ -81,7 +84,7 @@ const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
             disabled={isLoading}
             className={`flex items-center justify-center w-full px-4 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-accent hover:bg-accent-hover hover:shadow-xl`}
           >
-            {isLoading ? "Processing..." : "Get Started"}
+            {isLoading ? "Redirecting..." : "Subscribe Now"}
           </button>
         </div>
       </div>
@@ -89,9 +92,11 @@ const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
   );
 };
 
-const PackagesSection = () => {
+// Renamed the main section component
+const PricingSection = () => {
   const [loadingPlanId, setLoadingPlanId] = useState(null);
 
+  // This map's key must match the `id` in the data above
   const planToStripeCheckoutLinkUrl = useMemo(
     () => ({
       plan_pro: "https://buy.stripe.com/test_7sYaEX5T06oh63355pbfO00",
@@ -103,7 +108,7 @@ const PackagesSection = () => {
     const checkoutLinkUrl = planToStripeCheckoutLinkUrl[planId];
 
     if (!checkoutLinkUrl) {
-      toast.error("Stripe Checkout Link for this plan is not configured.");
+      toast.error("The payment link for this tier is not available.");
       return;
     }
 
@@ -111,13 +116,13 @@ const PackagesSection = () => {
 
     try {
       if (!stripePromise) {
-        toast.error("Stripe configuration is missing. Payments are disabled.");
-        throw new Error("Stripe is not initialized.");
+        toast.error("Payment system is currently unavailable.");
+        throw new Error("Stripe has not been initialized.");
       }
       window.location.href = checkoutLinkUrl;
     } catch (error) {
-      console.error("Error during Stripe redirection:", error);
-      toast.error("An unexpected error occurred while redirecting to payment.");
+      console.error("Stripe redirection failed:", error);
+      toast.error("Could not redirect to the payment page. Please try again.");
       setLoadingPlanId(null);
     }
   };
@@ -132,29 +137,28 @@ const PackagesSection = () => {
       <div className="container px-4 mx-auto max-w-7xl">
         <div className="text-center">
           <p className="text-sm font-bold tracking-wider uppercase text-accent">
-            Simple, Powerful Pricing
+            All-Inclusive Value
           </p>
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
-            The Only
+            Everything You Need,
             <span className="relative inline-block ml-3">
               <span className="absolute bottom-1 w-full h-3 bg-accent/20"></span>
-              <span className="relative">Plan You'll Ever Need</span>
+              <span className="relative">All in One Place</span>
             </span>
           </h2>
           <p className="max-w-2xl mx-auto mt-4 text-lg text-muted">
-            Unlock every feature and endpoint with one straightforward plan. No
-            tiers, no confusion—just pure API power.
+            Gain full access to our entire suite of features with a single, transparent plan. No hidden fees or complex tiers—just powerful, unrestricted data access.
           </p>
         </div>
 
         <div className="flex justify-center mt-16">
           <div className="w-full max-w-md">
-            {packages.map((pkg) => (
-              <PackageCard
-                key={pkg.id}
-                pkg={pkg}
-                onCtaClick={() => handlePlanSelect(pkg.id)}
-                isLoading={loadingPlanId === pkg.id}
+            {subscriptionTiers.map((tier) => (
+              <SubscriptionCard
+                key={tier.id}
+                tier={tier}
+                onCtaClick={() => handlePlanSelect(tier.id)}
+                isLoading={loadingPlanId === tier.id}
               />
             ))}
           </div>
@@ -170,7 +174,7 @@ const PackagesSection = () => {
             className="mt-6 cursor-pointer"
           >
             <button className="flex items-center gap-2 px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-accent hover:bg-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-              Schedule a Free Consultation <ArrowRight size={18} />
+              Book a Discovery Call <ArrowRight size={18} />
             </button>
           </ScrollLink>
         </div>
@@ -179,4 +183,4 @@ const PackagesSection = () => {
   );
 };
 
-export default PackagesSection;
+export default PricingSection;

@@ -27,35 +27,36 @@ const staggerContainer = {
 const features = [
   {
     icon: Database,
-    title: "Real-Time Data, No Caching",
+    title: "Live Data Access",
     description:
-      "Access 100% live data directly from LinkedIn, ensuring you always have the most current information.",
+      "Get 100% real-time data from trusted sources—never cached, always current.",
   },
   {
     icon: Blocks,
-    title: "AI-Powered Endpoints",
+    title: "AI-Powered Insights",
     description:
-      "Leverage cutting-edge AI to gain meaningful insights and optimize your data processing.",
+      "Use advanced AI to extract smarter insights and streamline your workflows.",
   },
   {
     icon: ShieldCheck,
-    title: "GDPR Compliant",
+    title: "Privacy First",
     description:
-      "We prioritize your privacy and security with full GDPR compliance and no data storage.",
+      "Fully GDPR-compliant with zero data storage—your privacy is our priority.",
   },
   {
     icon: TrendingUp,
-    title: "100% Uptime Guarantee",
+    title: "Always On",
     description:
-      "Reliable and always available to meet your data needs without interruptions.",
+      "Count on 100% uptime for uninterrupted data access, anytime, anywhere.",
   },
   {
     icon: Zap,
-    title: "Lightning Fast Performance",
+    title: "Ultra-Fast Response",
     description:
-      "Experience global latency of less than 1000ms for seamless and efficient operations.",
+      "Global latency under 1000ms ensures smooth and efficient performance.",
   },
 ];
+
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <motion.div
@@ -92,7 +93,7 @@ const WhyChooseUs = () => {
                 <span className="relative">Choose</span>
               </span>
               <br />
-              MTN AI-LinkedIn Data API?
+              MTN AI Data API?
             </h2>
           </motion.div>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Volume2 } from "lucide-react";
-import { Link as ScrollLink } from 'react-scroll';
+import { Link as ScrollLink } from "react-scroll";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -33,11 +33,11 @@ const HeroSection = () => {
               variants={fadeInUp}
               className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
             >
-              Real-Time, AI-Powered{" "}
-              <span className="text-accent">LinkedIn</span> Data for
+              Accurate and quality on key{" "}
+              <span className="text-accent">companies</span> and
               <span className="relative inline-block ml-3">
                 <span className="absolute top-12 w-full h-3 bg-accent/20"></span>
-                <span className="relative">Developers</span>
+                <span className="relative">decision-makers</span>
               </span>
             </motion.h1>
 
@@ -45,9 +45,7 @@ const HeroSection = () => {
               variants={fadeInUp}
               className="mt-6 text-lg text-muted md:text-xl"
             >
-              Are you a developer looking to supercharge your applications with
-              real-time LinkedIn data? MTN Data ScrapeX API offers a
-              comprehensive solution.
+              Mtn gives you the most robust European mobile phone numbers and B2B emails of people you want to do business with.
             </motion.p>
 
             <motion.div variants={fadeInUp} className="mt-10">

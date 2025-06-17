@@ -16,63 +16,63 @@ import {
 const features = [
   {
     icon: Library,
-    title: "Access Detailed Company Data",
+    title: "Access Company Data",
     description:
-      "Gain company data such as job listings, posts, employee counts, industry insights, and more.",
+      "View detailed company profiles, including job listings, posts, employee size, and industry insights.",
   },
   {
     icon: Users,
-    title: "Identify C-Level Executives",
+    title: "Find Key Decision-Makers",
     description:
-      "Quickly identify top executives and decision-makers within organizations.",
+      "Instantly identify executives and top-level professionals within any organization.",
   },
   {
     icon: Search,
-    title: "Advanced Search and Filtering",
+    title: "Smart Search & Filters",
     description:
-      "Leverage LinkedIn’s filters to conduct precise and efficient searches for people and companies.",
+      "Use advanced filters to quickly find relevant people, companies, and content across platforms.",
   },
   {
     icon: ListTodo,
-    title: "Bulk Data Processing",
+    title: "Bulk Data Access",
     description:
-      "Fetch LinkedIn profiles, companies, jobs, and posts in bulk—up to 1,000 profiles per minute.",
+      "Fetch thousands of profiles, companies, jobs, or posts per minute with seamless bulk processing.",
   },
   {
     icon: MailCheck,
-    title: "Find Verified Emails Across LinkedIn",
+    title: "Verified Email Discovery",
     description:
-      "Generate verified emails for decision-makers, hiring teams, and professionals using advanced algorithms.",
+      "Find verified email addresses of professionals and decision-makers using intelligent detection.",
   },
   {
     icon: AtSign,
-    title: "Email-to-LinkedIn Profile Lookup",
+    title: "Email-to-Profile Match",
     description:
-      "Find LinkedIn profiles directly from email addresses for targeted outreach.",
+      "Look up public profiles from email addresses for precise targeting and outreach.",
   },
   {
     icon: Activity,
-    title: "Activity Insights",
+    title: "Activity Tracking",
     description:
-      'Track recent activities, connections, and "open to work" statuses, including posts and interactions.',
+      "Monitor recent activity, interests, and engagement signals from profiles and posts.",
   },
   {
     icon: Code,
     title: "Content Scraping with Pagination",
     description:
-      "Extract posts, comments, reactions, and more with full pagination support for scalable data collection.",
+      "Extract posts, comments, and reactions at scale with full pagination support.",
   },
   {
     icon: Filter,
-    title: "Get SalesNavigator Premium Insights",
+    title: "Premium Insights & Filters",
     description:
-      "Gain access to Premium info about accounts and leads using advanced filters to enhance your strategies.",
+      "Access enriched premium-level insights and fine-tuned filters to power your strategy.",
   },
   {
     icon: BookOpen,
-    title: "Access User-Friendly API Documentation",
+    title: "Developer-Friendly Docs",
     description:
-      "Integrate seamlessly with our API using clear, user-friendly documentation for an efficient developer experience.",
+      "Easy-to-follow documentation for fast, smooth integration into your workflow.",
   },
 ];
 
