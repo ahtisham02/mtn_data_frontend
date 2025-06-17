@@ -13,9 +13,18 @@ import PackagesSection from "../../ui-components/LandingPage/PackagesSection";
 import BookingSection from "../../ui-components/LandingPage/BookingSection";
 import TestimonialsSection from "../../ui-components/LandingPage/TestimonialsSection";
 import FaqSection from "../../ui-components/LandingPage/FaqSection";
+import Intercom from "@intercom/messenger-js-sdk";
 
 const LandingPage = () => {
   const location = useLocation();
+
+      const intercomAppId = import.meta.env.VITE_INTERCOM_APP_ID;
+  
+      useEffect(() => {
+      Intercom({
+        app_id: intercomAppId,
+      });
+    }, []);
 
   useEffect(() => {
     if (location.state?.scrollTo) {
