@@ -27,7 +27,7 @@ export const apiData = {
   ],
 };
 
-const API_BASE_URL = 'http://104.219.251.122:8080';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const collections = [
   {

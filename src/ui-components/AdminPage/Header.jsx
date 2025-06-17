@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Bell, ChevronDown, UserCircle, FileCode2, PlusCircle, User, Settings } from 'lucide-react';
+import { Search, Bell, ChevronDown, UserCircle, FileCode2, PlusCircle, User, Settings, Mountain } from 'lucide-react';
 import { collections } from '../../utils/data';
 
 const useClickOutside = (ref, handler) => {
@@ -23,37 +23,22 @@ const useClickOutside = (ref, handler) => {
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   
   const searchRef = useRef(null);
   const userMenuRef = useRef(null);
-  const orgMenuRef = useRef(null);
 
   useClickOutside(searchRef, () => setIsSearchOpen(false));
   useClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
-  useClickOutside(orgMenuRef, () => setIsOrgMenuOpen(false));
 
   const allEndpoints = collections.flatMap(c => c.endpoints);
   const filteredEndpoints = searchTerm ? allEndpoints.filter(ep => ep.name.toLowerCase().includes(searchTerm.toLowerCase())) : [];
 
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-20">
-      <div className="flex items-center space-x-4">
-        <div className="text-accent font-bold text-xl">Mtn</div>
-        <div ref={orgMenuRef} className="relative">
-          <button onClick={() => setIsOrgMenuOpen(prev => !prev)} className="flex items-center p-2 rounded-md border border-border bg-background">
-            <span className="text-sm font-medium">MTN Data ORG</span>
-            <ChevronDown className={`h-4 w-4 ml-2 text-muted transition-transform ${isOrgMenuOpen ? 'rotate-180' : ''}`} />
-          </button>
-          {isOrgMenuOpen && (
-            <div className="absolute top-full mt-2 w-56 bg-card border border-border rounded-md shadow-lg z-10">
-              <ul className="p-1">
-                <li><button className="w-full text-left flex items-center gap-2 p-2 text-sm rounded-md hover:bg-background"><PlusCircle className="w-4 h-4 text-muted"/> Create New Org</button></li>
-              </ul>
-            </div>
-          )}
-        </div>
+      <div className="flex items-center space-x-3">
+        <Mountain className="w-8 h-8 mb-0.5 text-accent" />
+        <div className="text-black font-bold text-2xl">MTN DATA</div>
       </div>
 
       <div ref={searchRef} className="flex-1 max-w-lg mx-4 relative">

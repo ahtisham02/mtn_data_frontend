@@ -1,8 +1,17 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../ui-components/AdminPage/Header';
 import MainSidebar from '../ui-components/AdminPage/MainSidebar';
+import Intercom from '@intercom/messenger-js-sdk';
+import { useEffect } from 'react';
 
 export default function AdminLayout() {
+    const intercomAppId = import.meta.env.VITE_INTERCOM_APP_ID;
+
+    useEffect(() => {
+    Intercom({
+      app_id: intercomAppId,
+    });
+  }, []);
   return (
     <div className="flex flex-col h-screen font-plus-jakarta">
       <Header />
