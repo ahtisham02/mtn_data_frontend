@@ -20,8 +20,8 @@
     background-position: 0% 50%;
   }
 }
-
+/* 
 .mask-gradient {
   -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
   mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-}
+} */

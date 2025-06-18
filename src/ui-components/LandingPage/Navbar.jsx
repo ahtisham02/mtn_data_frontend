@@ -3,9 +3,11 @@ import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mountain, Menu, X } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userToken = useSelector((state) => state.auth.userToken);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
@@ -35,7 +37,7 @@ const Navbar = () => {
             <span className="text-2xl font-bold text-foreground">MTN DATA</span>
           </ScrollLink>
 
-          <ul className="hidden space-x-8 font-semibold text-foreground md:flex">
+          <ul className="hidden space-x-8 font-semibold text-foreground lg:flex">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <ScrollLink to={link.to} {...linkProps}>
@@ -46,9 +48,9 @@ const Navbar = () => {
           </ul>
 
           <div className="flex items-center gap-4">
-            {isLoggedIn ? (
+            {userToken ? (
               <RouterLink to="/dashboard" className="hidden px-6 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg sm:block bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-                Go to Dashboard
+                Dashboard
               </RouterLink>
             ) : (
               <RouterLink to="/login" className="hidden px-6 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg sm:block bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
@@ -57,7 +59,7 @@ const Navbar = () => {
             )}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 transition-colors rounded-md text-foreground md:hidden hover:bg-black/5"
+              className="p-2 transition-colors rounded-lg text-foreground lg:hidden hover:bg-black/5"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -68,7 +70,7 @@ const Navbar = () => {
       <motion.div
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
-        className="overflow-hidden md:hidden"
+        className="overflow-hidden lg:hidden"
       >
         <ul className="flex flex-col items-center p-4 space-y-4 font-semibold bg-background/95 text-foreground">
           {navLinks.map((link) => (
@@ -79,9 +81,9 @@ const Navbar = () => {
             </li>
           ))}
           <li>
-            {isLoggedIn ? (
+            {userToken ? (
                 <RouterLink to="/dashboard" className="block w-full px-8 py-3 text-center text-white transition-all duration-300 rounded-full bg-gradient-to-r from-accent to-accent-hover">
-                  Go to Dashboard
+                  Dashboard
                 </RouterLink>
               ) : (
                 <RouterLink to="/login" className="block w-full px-8 py-3 text-center text-white transition-all duration-300 rounded-full bg-gradient-to-r from-accent to-accent-hover">
