@@ -33,11 +33,11 @@ const HeroSection = () => {
               variants={fadeInUp}
               className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
             >
-              Accurate and quality on key{" "}
-              <span className="text-accent">companies</span> and
+              Fuel Your{" "}
+              <span className="text-accent">Pipeline</span> with Real-Time
               <span className="relative inline-block ml-3">
                 <span className="absolute top-12 w-full h-3 bg-accent/20"></span>
-                <span className="relative">decision-makers</span>
+                <span className="relative">B2B Intelligence</span>
               </span>
             </motion.h1>
 
