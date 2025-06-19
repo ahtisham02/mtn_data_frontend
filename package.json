@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@intercom/messenger-js-sdk": "^0.0.14",
+    "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^2.8.2",
     "@stripe/stripe-js": "^7.3.1",
     "axios": "^1.10.0",

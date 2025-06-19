@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle, XCircle, ArrowRight, Gift, Zap, TrendingUp, Rocket, Building2 } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { loadStripe } from '@stripe/stripe-js';
@@ -69,7 +71,6 @@ const packages = [
 
 const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
   const isFreePlan = pkg.price === 0;
-
   return (
     <div className="flex flex-col h-full p-8 transition-all duration-300 bg-white border rounded-2xl border-border hover:shadow-2xl hover:-translate-y-2">
       <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-6 ${isFreePlan ? 'bg-gray-100' : 'bg-accent/10'}`}>
@@ -77,25 +78,14 @@ const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
       </div>
       <h3 className="text-2xl font-bold text-foreground">{pkg.name}</h3>
       <div className="flex items-end mt-4">
-        {typeof pkg.price === 'number' ? (
-          <>
-            <span className="text-5xl font-extrabold text-foreground">${pkg.price}</span>
-            <span className="pb-1 ml-2 font-semibold text-muted">/Month</span>
-          </>
-        ) : (
-          <span className="text-4xl font-extrabold text-foreground">{pkg.price}</span>
-        )}
+        {typeof pkg.price === 'number' ? (<><span className="text-5xl font-extrabold text-foreground">${pkg.price}</span><span className="pb-1 ml-2 font-semibold text-muted">/Month</span></>) : (<span className="text-4xl font-extrabold text-foreground">{pkg.price}</span>)}
       </div>
       <div className="mt-4 space-y-1 text-sm text-muted font-semibold">{pkg.details.map((detail) => (<p key={detail}>{detail}</p>))}</div>
       <div className="flex flex-col flex-grow pt-8 mt-8 border-t border-border">
         <ul className="space-y-4">{pkg.features.map((feature) => (<li key={feature.text} className="flex items-start gap-3">{feature.included ? (<CheckCircle className="flex-shrink-0 w-5 h-5 mt-0.5 text-green-500" />) : (<XCircle className="flex-shrink-0 w-5 h-5 mt-0.5 text-rose-400" />)}<span className={!feature.included ? "text-muted line-through" : "text-foreground"}>{feature.text}</span></li>))}</ul>
         {pkg.rateLimit && (<p className="mt-6 text-xs font-semibold text-muted">{pkg.rateLimit}</p>)}
         <div className="mt-auto pt-8">
-          <button
-            onClick={onCtaClick}
-            disabled={isFreePlan || isLoading}
-            className={`flex items-center justify-center w-full px-4 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg ${isFreePlan ? 'bg-muted cursor-not-allowed' : 'bg-accent hover:bg-accent-hover hover:shadow-xl'}`}
-          >
+          <button onClick={onCtaClick} disabled={isFreePlan || isLoading} className={`flex items-center justify-center w-full px-4 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg ${isFreePlan ? 'bg-muted cursor-not-allowed' : 'bg-accent hover:bg-accent-hover hover:shadow-xl'}`}>
             {isLoading ? "Processing..." : (isFreePlan ? 'Current Plan' : 'Get Started')}
           </button>
         </div>
@@ -106,6 +96,9 @@ const PackageCard = ({ pkg, onCtaClick, isLoading }) => {
 
 const PackagesSection = () => {
     const [loadingPlanId, setLoadingPlanId] = useState(null);
+    const userToken = useSelector((state) => state?.auth?.userToken);
+    const navigate = useNavigate();
+
     const standardPackages = packages.filter(p => p.price !== 'Custom');
     const customPackage = packages.find(p => p.price === 'Custom');
 
@@ -116,6 +109,11 @@ const PackagesSection = () => {
     }), []);
 
     const handlePlanSelect = async (planId) => {
+        if (!userToken) {
+            navigate("/login");
+            return;
+        }
+
         const checkoutLinkUrl = planToStripeCheckoutLinkUrl[planId];
 
         if (!checkoutLinkUrl || checkoutLinkUrl.startsWith("YOUR_")) {
@@ -177,6 +175,7 @@ const PackagesSection = () => {
                                             <CheckCircle className="flex-shrink-0 w-4 h-4 text-white/80" />
                                             {feature.text}
                                         </li>
+
                                     ))}
                                 </ul>
                             </div>
