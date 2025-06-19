@@ -121,7 +121,7 @@ const SignupPage = () => {
             onBlur={formik.handleBlur}
           />
           {formik.touched.name && formik.errors.name ? (
-            <div className="pt-1 text-xs text-red-500">{formik.errors.name}</div>
+            <div className="pt-[1px] text-xs text-red-500">{formik.errors.name}</div>
           ) : null}
 
           <FormInput
@@ -134,7 +134,7 @@ const SignupPage = () => {
             onBlur={formik.handleBlur}
           />
           {formik.touched.email && formik.errors.email ? (
-            <div className="pt-1 text-xs text-red-500">{formik.errors.email}</div>
+            <div className="pt-[1px] text-xs text-red-500">{formik.errors.email}</div>
           ) : null}
 
           <FormInput
@@ -160,7 +160,7 @@ const SignupPage = () => {
             }
           />
           {formik.touched.password && formik.errors.password ? (
-            <div className="pt-1 text-xs text-red-500">{formik.errors.password}</div>
+            <div className="pt-[1px] text-xs text-red-500">{formik.errors.password}</div>
           ) : null}
 
           <motion.button
