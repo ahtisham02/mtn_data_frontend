@@ -35,7 +35,7 @@ const HeroSection = () => {
             >
               Fuel Your{" "}
               <span className="text-accent">Pipeline</span> with Real-Time
-              <span className="relative inline-block ml-3">
+              <span className="relative inline-block">
                 <span className="absolute top-12 w-full h-3 bg-accent/20"></span>
                 <span className="relative">B2B Intelligence</span>
               </span>
