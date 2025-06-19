@@ -185,10 +185,10 @@ const LoginPage = () => {
               <Chrome className="w-5 h-5 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">Continue with Google</span>
             </button>
-            <button className="flex items-center justify-center flex-1 w-full gap-3 py-2 text-sm font-semibold transition-all duration-300 border rounded-full sm:rounded-md border-border text-muted hover:bg-zinc-100 hover:text-foreground">
+            {/* <button className="flex items-center justify-center flex-1 w-full gap-3 py-2 text-sm font-semibold transition-all duration-300 border rounded-full sm:rounded-md border-border text-muted hover:bg-zinc-100 hover:text-foreground">
               <Facebook className="w-5 h-5 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">Continue with Facebook</span>
-            </button>
+            </button> */}
           </motion.div>
 
           <motion.p variants={itemVariants} className="mt-6 text-sm text-center text-muted">
